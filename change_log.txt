@@ -1,0 +1,5 @@
+# 1.1 | 2017-08-23
+   - Fixed data from selected fields not being included in the request.
+
+# 1.0 | 2017-08-08
+   - It's all new!
