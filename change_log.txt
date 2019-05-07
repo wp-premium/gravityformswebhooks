@@ -1,5 +1,16 @@
+# 1.2 | 2019-04-25
+   - Added "gform_webhooks_post_request" action.
+   - Added GPL to plugin header
+   - Added support for delaying feed processing until after payment has been successfully completed using the PayPal Standard Add-On.
+   - Added support for feed duplication.
+   - Added support for using the {admin_ajax_url} and {rest_api_url} merge tags in the Request URL setting.
+   - Updated logging statement.
+   - Updated Plugin URI and Author URI to use https
+
+
 # 1.1 | 2017-08-23
    - Fixed data from selected fields not being included in the request.
+
 
 # 1.0 | 2017-08-08
    - It's all new!
