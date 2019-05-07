@@ -187,7 +187,26 @@ class GF_Webhooks extends GFFeedAddOn {
 
 	}
 
+	/**
+	 * Plugin starting point. Handles hooks and loading of language files.
+	 *
+	 * @since 1.1.6 Added PayPal delay support.
+	 * @since 1.1.5 Added support for the {admin_ajax_url} and {rest_api_url} merge tags.
+	 */
+	public function init() {
+		parent::init();
 
+		if ( $this->is_gravityforms_supported() ) {
+			add_action( 'gform_admin_pre_render', array( $this, 'add_merge_tags' ) );
+			add_filter( 'gform_pre_replace_merge_tags', array( $this, 'replace_merge_tags' ), 10, 7 );
+
+			$this->add_delayed_payment_support(
+				array(
+					'option_label' => esc_html__( 'Send webhook only when payment is received.', 'gravityformswebhooks' ),
+				)
+			);
+		}
+	}
 
 
 
@@ -543,11 +562,45 @@ class GF_Webhooks extends GFFeedAddOn {
 
 	}
 
+	/**
+	 * Enable feed duplication.
+	 *
+	 * @since  1.1.3
+	 * @access public
+	 *
+	 * @param int|array $id The ID of the feed to be duplicated or the feed object when duplicating a form.
+	 *
+	 * @return bool
+	 */
+	public function can_duplicate_feed( $id ) {
 
+		return true;
+
+	}
 
 
 
 	// # FEED PROCESSING -----------------------------------------------------------------------------------------------
+
+	/**
+	 * Determines if feed processing should happen asynchronously.
+	 *
+	 * @since 1.1.6 Added PayPal delay support.
+	 * @since 1.0
+	 *
+	 * @param array $feed  The feed currently being processed.
+	 * @param array $entry The entry currently being processed.
+	 * @param array $form  The form currently being processed.
+	 *
+	 * @return bool
+	 */
+	public function is_asynchronous( $feed, $entry, $form ) {
+		if ( $this->_bypass_feed_delay ) {
+			return false;
+		}
+
+		return parent::is_asynchronous( $feed, $entry, $form );
+	}
 
 	/**
 	 * Send webhook request.
@@ -670,8 +723,20 @@ class GF_Webhooks extends GFFeedAddOn {
 		if ( is_wp_error( $response ) ) {
 			$this->add_feed_error( sprintf( esc_html__( 'Webhook was not successfully executed. %s (%d)', 'gravityformswebhooks' ), $response->get_error_message(), $response->get_error_code() ), $feed, $entry, $form );
 		} else {
-			$this->log_debug( __METHOD__ . '(): Webhook successfully executed.' );
+			$this->log_debug( sprintf( '%s(): Webhook successfully executed. code: %s; body: %s', __METHOD__, wp_remote_retrieve_response_code( $response ), wp_remote_retrieve_body( $response ) ) );
 		}
+
+		/**
+		 * Fired after a Webhooks request has been executed.
+		 *
+		 * @since 1.1.2
+		 *
+		 * @param WP_Error|array $response The response or WP_Error on failure.
+		 * @param array          $feed     The current Feed object.
+		 * @param array          $entry    The current Entry object.
+		 * @param array          $form     The current Form object.
+		 */
+		gf_do_action( array( 'gform_webhooks_post_request', $form['id'], $feed['id'] ), $response, $feed, $entry, $form );
 
 	}
 
@@ -709,6 +774,77 @@ class GF_Webhooks extends GFFeedAddOn {
 		 */
 		return gf_apply_filters( array( 'gform_webhooks_request_data', $form['id'] ), $request_data, $feed, $entry, $form );
 
+	}
+
+	// # MERGE TAGS ----------------------------------------------------------------------------------------------------
+
+	/**
+	 * Include the merge tags in the merge tag drop downs in the form settings area.
+	 *
+	 * @param array $form The current form object.
+	 *
+	 * @since 1.1.5
+	 *
+	 * @return array
+	 */
+	public function add_merge_tags( $form ) {
+		if ( $this->is_form_settings() ) {
+			?>
+			<script type="text/javascript">
+				if (window.gform)
+					gform.addFilter('gform_merge_tags', 'gf_webhooks_merge_tags');
+
+				function gf_webhooks_merge_tags(mergeTags, elementId, hideAllFields, excludeFieldTypes, isPrepop, option) {
+					mergeTags['other'].tags.push({
+						tag: '{admin_ajax_url}',
+						label: '<?php esc_html_e( 'Admin Ajax URL', 'gravityformswebhooks' ) ?>'
+					}, {
+						tag: '{rest_api_url}',
+						label: '<?php esc_html_e( 'REST API URL', 'gravityformswebhooks' ) ?>'
+					});
+
+					return mergeTags;
+				}
+			</script>
+			<?php
+		}
+
+		return $form;
+	}
+
+	/**
+	 * Replace the merge tags.
+	 *
+	 * @param string $text       The current text in which merge tags are being replaced.
+	 * @param array  $form       The current form object.
+	 * @param array  $entry      The current entry object.
+	 * @param bool   $url_encode Whether or not to encode any URLs found in the replaced value.
+	 * @param bool   $esc_html   Whether or not to encode HTML found in the replaced value.
+	 * @param bool   $nl2br      Whether or not to convert newlines to break tags.
+	 * @param string $format     The format requested for the location the merge is being used. Possible values: html, text or url.
+	 *
+	 * @since 1.1.5
+	 *
+	 * @return string
+	 */
+	public function replace_merge_tags( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ) {
+		if ( empty( $entry ) || empty( $form ) ) {
+			return $text;
+		}
+
+		$admin_ajax_url_merge_tag = '{admin_ajax_url}';
+		if ( strpos( $text, $admin_ajax_url_merge_tag ) !== false ) {
+			$admin_ajax_url = GFCommon::format_variable_value( admin_url( 'admin-ajax.php' ), $url_encode, $esc_html, $format, $nl2br );
+			$text           = str_replace( $admin_ajax_url_merge_tag, $admin_ajax_url, $text );
+		}
+
+		$rest_api_url_merge_tag = '{rest_api_url}';
+		if ( strpos( $text, $rest_api_url_merge_tag ) !== false ) {
+			$rest_api_url = GFCommon::format_variable_value( rest_url(), $url_encode, $esc_html, $format, $nl2br );
+			$text         = str_replace( $rest_api_url_merge_tag, $rest_api_url, $text );
+		}
+
+		return $text;
 	}
 
 }
