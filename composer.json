@@ -1,0 +1,9 @@
+{
+    "name": "wp-premium/gravityformswebhooks",
+    "type": "wordpress-plugin",
+    "autoload": {
+        "classmap": [
+            "."
+        ]
+    }
+}
