@@ -1,5 +1,7 @@
 <?php
 
+defined( 'ABSPATH' ) || die();
+
 // Load Feed Add-On Framework.
 GFForms::include_feed_addon_framework();
 
@@ -174,10 +176,12 @@ class GF_Webhooks extends GFFeedAddOn {
 	 */
 	public function styles() {
 
+		$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG || isset( $_GET['gform_debug'] ) ? '' : '.min';
+
 		$styles = array(
 			array(
 				'handle'  => $this->_slug . '_form_settings',
-				'src'     => $this->get_base_url() . '/css/form_settings.css',
+				'src'     => $this->get_base_url() . "/css/form_settings{$min}.css",
 				'version' => $this->_version,
 				'enqueue' => array( array( 'admin_page' => array( 'form_settings' ) ) ),
 			),
@@ -208,6 +212,21 @@ class GF_Webhooks extends GFFeedAddOn {
 		}
 	}
 
+	/**
+	 * Return the plugin's icon for the plugin/form settings menu.
+	 *
+	 * @since 1.3
+	 *
+	 * @return string
+	 */
+	public function get_menu_icon() {
+
+		return file_get_contents( $this->get_base_path() . '/images/menu-icon.svg' );
+
+	}
+
+
+
 
 
 	// # FEED SETTINGS -------------------------------------------------------------------------------------------------
@@ -223,6 +242,21 @@ class GF_Webhooks extends GFFeedAddOn {
 	 * @return array
 	 */
 	public function feed_settings_fields() {
+
+		// Prepare dependency for Request Body.
+		if ( version_compare( GFForms::$version, '2.5-dev-1', '<' ) ) {
+			$body_deps = array( 'field' => 'requestBodyType', 'values' => array( 'select_fields' ) );
+		} else {
+			$body_deps = array(
+				'live'   => true,
+				'fields' => array(
+					array(
+						'field'  => 'requestBodyType',
+						'values' => array( 'select_fields' ),
+					),
+				),
+			);
+		}
 
 		return array(
 			array(
@@ -268,23 +302,23 @@ class GF_Webhooks extends GFFeedAddOn {
 						),
 						'choices'        => array(
 							array(
-								'label' => esc_html__( 'GET', 'gravityformswebhooks' ),
+								'label' => 'GET',
 								'value' => 'GET',
 							),
 							array(
-								'label' => esc_html__( 'POST', 'gravityformswebhooks' ),
+								'label' => 'POST',
 								'value' => 'POST',
 							),
 							array(
-								'label' => esc_html__( 'PUT', 'gravityformswebhooks' ),
+								'label' => 'PUT',
 								'value' => 'PUT',
 							),
 							array(
-								'label' => esc_html__( 'PATCH', 'gravityformswebhooks' ),
+								'label' => 'PATCH',
 								'value' => 'PATCH',
 							),
 							array(
-								'label' => esc_html__( 'DELETE', 'gravityformswebhooks' ),
+								'label' => 'DELETE',
 								'value' => 'DELETE',
 							),
 						),
@@ -347,7 +381,7 @@ class GF_Webhooks extends GFFeedAddOn {
 						'default_value'  => 'all_fields',
 						'horizontal'     => true,
 						'required'       => true,
-						'onchange'       => "jQuery(this).closest('form').submit();",
+						'onchange'       => version_compare( GFForms::$version, '2.5-dev-1', '<' ) ? "jQuery(this).closest('form').submit();" : null,
 						'tooltip'        => sprintf(
 							'<h6>%s</h6>%s',
 							esc_html__( 'Request Body', 'gravityformswebhooks' ),
@@ -370,7 +404,7 @@ class GF_Webhooks extends GFFeedAddOn {
 						'type'           => 'generic_map',
 						'required'       => true,
 						'merge_tags'     => true,
-						'dependency'     => array( 'field' => 'requestBodyType', 'values' => array( 'select_fields' ) ),
+						'dependency'     => $body_deps,
 						'tooltip'        => sprintf(
 							'<h6>%s</h6>%s',
 							esc_html__( 'Field Values', 'gravityformswebhooks' ),
@@ -391,6 +425,11 @@ class GF_Webhooks extends GFFeedAddOn {
 						'label'          => esc_html__( 'Webhook Condition', 'gravityformswebhooks' ),
 						'checkbox_label' => esc_html__( 'Enable Condition', 'gravityformswebhooks' ),
 						'instructions'   => esc_html__( 'Execute Webhook if', 'gravityformswebhooks' ),
+						'tooltip'        => sprintf(
+							'<h6>%s</h6>%s',
+							esc_html__( 'Conditional Logic', 'gravityforms' ),
+							esc_html__( 'When conditions are enabled, the Webhook will only be executed when the conditions are met. When disabled, the Webhook will be executed for every form submission.', 'gravityforms' )
+						),
 					),
 				),
 			),
@@ -663,7 +702,7 @@ class GF_Webhooks extends GFFeedAddOn {
 
 		// If this is a GET or DELETE request, add request data to request URL.
 		if ( in_array( $request_method, array( 'GET', 'DELETE' ) ) && ! empty( $request_data ) ) {
-			$request_url = add_query_arg( $request_data, $request_url );
+			$request_url = add_query_arg( urlencode_deep( $request_data ), $request_url );
 		}
 
 		// If this is a PUT or POST request, format request data.
@@ -699,7 +738,7 @@ class GF_Webhooks extends GFFeedAddOn {
 			'body'      => ! in_array( $request_method, array( 'GET', 'DELETE' ) ) ? $request_data : null,
 			'method'    => $request_method,
 			'headers'   => $request_headers,
-			'sslverify' => apply_filters( 'https_local_ssl_verify', true ),
+			'sslverify' => apply_filters( 'https_local_ssl_verify', true, $request_url ),
 		);
 
 		/**
