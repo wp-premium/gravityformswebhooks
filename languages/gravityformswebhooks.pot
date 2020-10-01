@@ -1,177 +1,150 @@
-# Copyright 2009-2019 Rocketgenius, Inc.
+# Copyright (C) 2020 Gravity Forms
+# This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: Gravity Forms Webhooks Add-On 1.2\n"
-"Report-Msgid-Bugs-To: https://www.gravtiyforms.com\n"
-"POT-Creation-Date: 2019-04-24 14:14:34+00:00\n"
+"Project-Id-Version: Gravity Forms Webhooks Add-On 1.4\n"
+"Report-Msgid-Bugs-To: https://gravityforms.com/support\n"
+"Last-Translator: Gravity Forms <support@gravityforms.com>\n"
+"Language-Team: Gravity Forms <support@gravityforms.com>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2019-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Rocketgenius <customerservice@rocketgenius.com>\n"
-"Language-Team: Rocketgenius <customerservice@rocketgenius.com>\n"
-"X-Generator: Gravity Forms Build Server\n"
-"X-Poedit-KeywordsList: "
-"__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
-"attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
-"Project-Id-Version: gravityformswebhooks\n"
-"Language: en_US\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Poedit-Basepath: ../\n"
-"X-Poedit-Bookmarks: \n"
-"X-Poedit-Country: United States\n"
-"X-Poedit-SearchPath-0: .\n"
-"X-Poedit-SourceCharset: utf-8\n"
-"X-Textdomain-Support: yes\n"
+"POT-Creation-Date: 2020-09-10T17:57:36+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.4.0\n"
+"X-Domain: gravityformswebhooks\n"
 
-#: class-gf-webhooks.php:205
-msgid "Send webhook only when payment is received."
-msgstr ""
-
-#: class-gf-webhooks.php:231 class-gf-webhooks.php:238
-#: class-gf-webhooks.php:332 class-gf-webhooks.php:412
-msgid "Name"
-msgstr ""
-
-#: class-gf-webhooks.php:239
-msgid "Enter a feed name to uniquely identify this setup."
-msgstr ""
-
-#: class-gf-webhooks.php:247 class-gf-webhooks.php:254
-#: class-gf-webhooks.php:413
-msgid "Request URL"
-msgstr ""
-
-#: class-gf-webhooks.php:255
-msgid "Enter the URL to be used in the webhook request."
-msgstr ""
-
-#: class-gf-webhooks.php:259 class-gf-webhooks.php:266
-msgid "Request Method"
-msgstr ""
-
-#: class-gf-webhooks.php:267
-msgid "Select the HTTP method used for the webhook request."
-msgstr ""
-
-#: class-gf-webhooks.php:271
-msgid "GET"
-msgstr ""
-
-#: class-gf-webhooks.php:275
-msgid "POST"
-msgstr ""
-
-#: class-gf-webhooks.php:279
-msgid "PUT"
-msgstr ""
-
-#: class-gf-webhooks.php:283
-msgid "PATCH"
-msgstr ""
-
-#: class-gf-webhooks.php:287
-msgid "DELETE"
-msgstr ""
-
-#: class-gf-webhooks.php:293 class-gf-webhooks.php:300
-msgid "Request Format"
-msgstr ""
-
-#: class-gf-webhooks.php:301
-msgid "Select the format for the webhook request."
-msgstr ""
-
-#: class-gf-webhooks.php:305
-msgid "JSON"
-msgstr ""
-
-#: class-gf-webhooks.php:309
-msgid "FORM"
-msgstr ""
-
-#: class-gf-webhooks.php:319 class-gf-webhooks.php:326
-msgid "Request Headers"
-msgstr ""
-
-#: class-gf-webhooks.php:327
-msgid "Setup the HTTP headers to be sent with the webhook request."
-msgstr ""
-
-#: class-gf-webhooks.php:344 class-gf-webhooks.php:353
-msgid "Request Body"
-msgstr ""
-
-#: class-gf-webhooks.php:354
-msgid ""
-"Select if all fields or select fields should be sent with the webhook "
-"request."
-msgstr ""
-
-#: class-gf-webhooks.php:358
-msgid "All Fields"
-msgstr ""
-
-#: class-gf-webhooks.php:362
-msgid "Select Fields"
-msgstr ""
-
-#: class-gf-webhooks.php:368 class-gf-webhooks.php:376
-msgid "Field Values"
-msgstr ""
-
-#: class-gf-webhooks.php:377
-msgid "Setup the fields to be sent in the webhook request."
-msgstr ""
-
-#: class-gf-webhooks.php:391
-msgid "Webhook Condition"
-msgstr ""
-
-#: class-gf-webhooks.php:392
-msgid "Enable Condition"
-msgstr ""
-
-#: class-gf-webhooks.php:393
-msgid "Execute Webhook if"
-msgstr ""
-
-#: class-gf-webhooks.php:430
-msgid "Select a Name"
-msgstr ""
-
-#: class-gf-webhooks.php:693
-msgid "Webhook was not processed because request URL was empty."
-msgstr ""
-
-#: class-gf-webhooks.php:724
-msgid "Webhook was not successfully executed. %s (%d)"
-msgstr ""
-
-#: class-gf-webhooks.php:800
-msgid "Admin Ajax URL"
-msgstr ""
-
-#: class-gf-webhooks.php:803
-msgid "REST API URL"
-msgstr ""
-
-#. Plugin Name of the plugin/theme
+#. Plugin Name of the plugin
 msgid "Gravity Forms Webhooks Add-On"
 msgstr ""
 
-#. Plugin URI of the plugin/theme
-msgid "https://www.gravityforms.com"
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+msgid "https://gravityforms.com"
 msgstr ""
 
-#. Description of the plugin/theme
+#. Description of the plugin
 msgid "Integrates Gravity Forms with third party services using custom webhooks."
 msgstr ""
 
-#. Author of the plugin/theme
-msgid "rocketgenius"
+#. Author of the plugin
+msgid "Gravity Forms"
 msgstr ""
 
-#. Author URI of the plugin/theme
-msgid "https://www.rocketgenius.com"
+#: class-gf-webhooks.php:209
+msgid "Send webhook only when payment is received."
+msgstr ""
+
+#: class-gf-webhooks.php:265
+#: class-gf-webhooks.php:272
+#: class-gf-webhooks.php:366
+#: class-gf-webhooks.php:451
+msgid "Name"
+msgstr ""
+
+#: class-gf-webhooks.php:273
+msgid "Enter a feed name to uniquely identify this setup."
+msgstr ""
+
+#: class-gf-webhooks.php:281
+#: class-gf-webhooks.php:288
+#: class-gf-webhooks.php:452
+msgid "Request URL"
+msgstr ""
+
+#: class-gf-webhooks.php:289
+msgid "Enter the URL to be used in the webhook request."
+msgstr ""
+
+#: class-gf-webhooks.php:293
+#: class-gf-webhooks.php:300
+msgid "Request Method"
+msgstr ""
+
+#: class-gf-webhooks.php:301
+msgid "Select the HTTP method used for the webhook request."
+msgstr ""
+
+#: class-gf-webhooks.php:327
+#: class-gf-webhooks.php:334
+msgid "Request Format"
+msgstr ""
+
+#: class-gf-webhooks.php:335
+msgid "Select the format for the webhook request."
+msgstr ""
+
+#: class-gf-webhooks.php:339
+msgid "JSON"
+msgstr ""
+
+#: class-gf-webhooks.php:343
+msgid "FORM"
+msgstr ""
+
+#: class-gf-webhooks.php:353
+#: class-gf-webhooks.php:360
+msgid "Request Headers"
+msgstr ""
+
+#: class-gf-webhooks.php:361
+msgid "Setup the HTTP headers to be sent with the webhook request."
+msgstr ""
+
+#: class-gf-webhooks.php:378
+#: class-gf-webhooks.php:387
+msgid "Request Body"
+msgstr ""
+
+#: class-gf-webhooks.php:388
+msgid "Select if all fields or select fields should be sent with the webhook request."
+msgstr ""
+
+#: class-gf-webhooks.php:392
+msgid "All Fields"
+msgstr ""
+
+#: class-gf-webhooks.php:396
+msgid "Select Fields"
+msgstr ""
+
+#: class-gf-webhooks.php:402
+#: class-gf-webhooks.php:410
+msgid "Field Values"
+msgstr ""
+
+#: class-gf-webhooks.php:411
+msgid "Setup the fields to be sent in the webhook request."
+msgstr ""
+
+#: class-gf-webhooks.php:425
+msgid "Webhook Condition"
+msgstr ""
+
+#: class-gf-webhooks.php:426
+msgid "Enable Condition"
+msgstr ""
+
+#: class-gf-webhooks.php:427
+msgid "Execute Webhook if"
+msgstr ""
+
+#: class-gf-webhooks.php:469
+msgid "Select a Name"
+msgstr ""
+
+#: class-gf-webhooks.php:732
+msgid "Webhook was not processed because request URL was empty."
+msgstr ""
+
+#: class-gf-webhooks.php:763
+msgid "Webhook was not successfully executed. %s (%d)"
+msgstr ""
+
+#: class-gf-webhooks.php:839
+msgid "Admin Ajax URL"
+msgstr ""
+
+#: class-gf-webhooks.php:842
+msgid "REST API URL"
 msgstr ""
